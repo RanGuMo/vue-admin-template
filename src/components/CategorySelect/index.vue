@@ -7,6 +7,7 @@
           placeholder="请选择"
           v-model="cForm.category1Id"
           @change="handler1"
+          :disabled="show"
         >
           <el-option
             :label="c1.name"
@@ -21,6 +22,7 @@
           placeholder="请选择"
           v-model="cForm.category2Id"
           @change="handler2"
+          :disabled="show"
         >
           <el-option
             :label="c2.name"
@@ -31,12 +33,17 @@
         </el-select>
       </el-form-item>
       <el-form-item label="三级分类">
-        <el-select placeholder="请选择" v-model="cForm.category3Id" @change="handler3">
+        <el-select
+          placeholder="请选择"
+          v-model="cForm.category3Id"
+          @change="handler3"
+        >
           <el-option
             :label="c3.name"
             :value="c3.id"
             v-for="(c3, index) in list3"
             :key="c3.id"
+            :disabled="show"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -44,8 +51,8 @@
   </div>
 </template>
 <script>
-
 export default {
+  props: ["show"],
   name: "CategorySelect",
   data() {
     return {
@@ -84,11 +91,11 @@ export default {
       // 清除数据
       this.list2 = [];
       this.list3 = [];
-      this.cForm.category2Id = '';
-      this.cForm.category3Id = '';
+      this.cForm.category2Id = "";
+      this.cForm.category3Id = "";
       // 解构出一级分类的id
       const { category1Id } = this.cForm;
-      this.$emit('getCategoryId', { categoryId: category1Id, level: 1 });
+      this.$emit("getCategoryId", { categoryId: category1Id, level: 1 });
       // 通过一级分类的id 获取二级分类
       let result = await this.$API.attr.reqCategory2List(category1Id);
       console.log(result);
@@ -98,12 +105,12 @@ export default {
     },
     //二级分类的select事件回调（当二级分类的option发生变化的时候获取相应三级分类的数据）
     async handler2() {
-       // 清除数据
+      // 清除数据
       this.list3 = [];
-      this.cForm.category3Id = '';
+      this.cForm.category3Id = "";
       // 解构出二级分类的id
       const { category2Id } = this.cForm;
-      this.$emit('getCategoryId',  { categoryId: category2Id, level: 2 });
+      this.$emit("getCategoryId", { categoryId: category2Id, level: 2 });
       // 通过二级分类的id 获取三级分类
       let result = await this.$API.attr.reqCategory3List(category2Id);
       // console.log(result);
@@ -115,8 +122,8 @@ export default {
     handler3() {
       // 解构出三级分类的id
       const { category3Id } = this.cForm;
-      this.$emit('getCategoryId',  { categoryId: category3Id, level: 3 });
-    }
+      this.$emit("getCategoryId", { categoryId: category3Id, level: 3 });
+    },
   },
 };
 </script>
