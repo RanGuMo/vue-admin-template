@@ -41,8 +41,10 @@ import API from '@/api';
 // 好处是：任意组件都可以使用API相关的接口
 Vue.prototype.$API = API;
 import CategorySelect from '@/components/CategorySelect';
+import HintButton from '@/components/HintButton';
 // 注册全局组件
 Vue.component(CategorySelect.name, CategorySelect);
+Vue.component(HintButton.name, HintButton);
 
 new Vue({
   el: '#app',

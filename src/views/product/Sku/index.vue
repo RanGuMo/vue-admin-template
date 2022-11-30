@@ -1,22 +1,19 @@
 <template>
-    <div>
-      Sku
-    </div>
+  <div>
+    <!-- Sku -->
+    
+  </div>
 </template>
 <script>
 export default {
-  name:'Sku',
-   data() {
-      return {
-      }
-   },
-   created(){
-   },
-   computed:{
-   },
-   methods:{
-   },
-}
+  name: "Sku",
+  data() {
+    return {};
+  },
+  created() {},
+  computed: {},
+  methods: {},
+};
 </script>
 <style lang=
  scoped>
