@@ -37,6 +37,7 @@
           placeholder="请选择"
           v-model="cForm.category3Id"
           @change="handler3"
+          :disabled="show"
         >
           <el-option
             :label="c3.name"

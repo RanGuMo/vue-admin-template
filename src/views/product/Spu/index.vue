@@ -2,7 +2,7 @@
   <div>
     <!-- Spu -->
     <el-card style="margin: 20px 0px">
-      <CategorySelect @getCategoryId="getCategoryId" :show="!show" />
+      <CategorySelect @getCategoryId="getCategoryId" :show="(scene!=0)" />
     </el-card>
     <el-card>
       <!-- 底部这里将来是有三部分进行切换 -->
@@ -93,7 +93,7 @@ export default {
       category2Id: "",
       category3Id: "",
       //控制三级联动的可操作性
-      show: true,
+      // show: true,
       page: 1, //分页器当前第几页
       limit: 3, //每一页需要展示多少条数据
       records: [], //spu列表的数据
