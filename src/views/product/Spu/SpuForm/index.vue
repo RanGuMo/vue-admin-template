@@ -83,7 +83,7 @@
             <template slot-scope="{ row, $index }">
               <el-tag
                 :key="tag.id"
-                v-for="(tag,index) in row.spuSaleAttrValueList"
+                v-for="(tag, index) in row.spuSaleAttrValueList"
                 closable
                 :disable-transitions="false"
                 @close="row.spuSaleAttrValueList.splice(index, 1)"
@@ -96,7 +96,6 @@
                 v-model="row.inputValue"
                 ref="saveTagInput"
                 size="small"
-
                 @blur="handleInputConfirm(row)"
               >
               </el-input>
@@ -123,8 +122,8 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary">保存</el-button>
-        <el-button @click="$emit('changeScene', 0)">取消</el-button>
+        <el-button type="primary" @click="addOrUpdateSpu">保存</el-button>
+        <el-button @click="cancel">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -282,7 +281,7 @@ export default {
     handleInputConfirm(row) {
       const { baseSaleAttrId, inputValue } = row;
       //判断输入的值是否为空
-      if (inputValue.trim() == '') {
+      if (inputValue.trim() == "") {
         this.$message.error("销售属性值不能为空");
         row.inputVisible = false;
         return;
@@ -301,6 +300,59 @@ export default {
       //向销售属性的spuSaleAttrValueList属性里面添加新的销售属性值
       row.spuSaleAttrValueList.push(newSaleAttrValue);
       row.inputVisible = false;
+    },
+    // 保存按钮的回调
+    async addOrUpdateSpu() {
+      //整理参数：需要整理照片墙的数据
+      //携带参数：对于图片，需要携带imageName与imageUrl字段
+      this.spu.spuImageList = this.spuImageList.map((item) => {
+        return {
+          imageName: item.name,
+          //如果是新增 item.response存在，取item.response.data，
+          //如果是修改 则取item.url
+          imageUrl: (item.response && item.response.data) || item.url,
+        };
+      });
+      //  发请求
+      let result = await this.$API.spu.reqAddOrUpdateSpu(this.spu);
+      //  console.log(result)
+      if (result.code == 200) {
+        // 提示成功的信息
+        this.$message({ type: "success", message: "保存成功" });
+        // 通知父组件回到场景 0
+        this.$emit("changeScene", {scene:0,flag:this.spu.id?'修改':'添加'});
+      }
+      //清除数据
+      Object.assign(this._data, this.$options.data());
+
+    },
+
+    // 点击 “添加Spu” 按钮的时候，发请求的函数
+    async addSpuData(category3Id) {
+      // console.log("添加");
+       //添加SPU的时候收集三级分类的id
+       this.spu.category3Id= category3Id;
+      //  获取品牌信息
+      let tradeMarkResult = await this.$API.spu.reqTradeMarkList();
+      if (tradeMarkResult.code == 200) {
+        this.tradeMarkList = tradeMarkResult.data;
+      }
+
+      // 获取平台全部的销售属性
+      let saleResult = await this.$API.spu.reqBaseSaleAttrList();
+      if (saleResult.code == 200) {
+        this.saleAttrList = saleResult.data;
+      }
+    },
+    // 点击 “取消”按钮 的回调
+    cancel() {
+      //取消按钮的回调，通知父组件切换场景为0
+      this.$emit('changeScene', { scene: 0, flag: '' });
+      //清理数据
+      //Object.assign:es6中新增的方法可以合并对象
+      //组件实例this._data,可以操作data当中响应式数据
+      //this.$options可以获取配置对象，配置对象的data函数执行，返回的响应式数据为空的
+      Object.assign(this._data, this.$options.data());
     },
   },
 };
