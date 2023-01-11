@@ -55,7 +55,7 @@
           <el-option
             :label="unselect.name"
             :value="`${unselect.id}:${unselect.name}`"
-            v-for="(unselect, index) in unSelectSaleAttr"
+            v-for="(unselect,index) in unSelectSaleAttr"
             :key="unselect.id"
           ></el-option>
         </el-select>
@@ -109,7 +109,7 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" prop="prop" width="width">
-            <template slot-scope="{ row, $index }">
+            <template slot-scope="{row, $index }">
               <el-button
                 type="danger"
                 size="mini"
